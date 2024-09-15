@@ -19,10 +19,13 @@ public class EngineRepository {
     }
     public Optional<EngineEntity> getEngineById(UUID uuid) {
         EngineEntity engine = null;
+        int id = 0;
         for (EngineEntity eng : db) {
             if (eng.getUuid().equals(uuid)) {
                 engine = eng;
+                break;
             }
+            id++;
         }
         return Optional.ofNullable(engine);
     }
@@ -38,7 +41,9 @@ public class EngineRepository {
             }
             id++;
         }
-        db.set(id, engineEntity);
+        if (db.size() != id) {
+            db.set(id, engineEntity);
+        }
         return engineEntity;
     }
     public void deleteEngine(UUID uuid) {
@@ -49,6 +54,8 @@ public class EngineRepository {
             }
             id++;
         }
-        db.remove(id);
+        if (db.size() != id) {
+            db.remove(id);
+        }
     }
 }
