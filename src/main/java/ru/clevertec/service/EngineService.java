@@ -1,5 +1,6 @@
 package ru.clevertec.service;
 
+import lombok.AllArgsConstructor;
 import org.mapstruct.Mapper;
 import ru.clevertec.dto.EngineDto;
 import ru.clevertec.entity.EngineEntity;
@@ -11,10 +12,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-
+@AllArgsConstructor
 public class EngineService {
-    private final EngineRepository engineRepository = new EngineRepository();
-    private final EngineDtoMapper engineDtoMapper = new EngineDtoMapperImpl();
+    private EngineRepository engineRepository;
+    private EngineDtoMapper engineDtoMapper;
 
     public List<EngineDto> getEngines() {
         List<EngineEntity> engines = engineRepository.getEngines();
