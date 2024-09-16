@@ -16,6 +16,12 @@ public class TestData {
     public static EngineDto generateEngineDto() {
         return new EngineDto(UUID.randomUUID(), "AWT", 1200, 2, 1.8, Fuel.GAS, 150, 300000);
     }
+    public static EngineEntity generateNewEngineEntity() {
+        return new EngineEntity(UUID.randomUUID(), "CAXA", 900, 1, 1.4, Fuel.GAS, 122, 100000);
+    }
+    public static EngineDto generateNewEngineDto() {
+        return new EngineDto(UUID.randomUUID(), "CAXA", 900, 1, 1.4, Fuel.GAS, 122, 100000);
+    }
     public static List<EngineEntity> generateEngineEntityList() {
         return List.of(
                 new EngineEntity(UUID.randomUUID(), "AWT", 1200, 2, 1.8, Fuel.GAS, 150, 300000),

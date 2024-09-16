@@ -11,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.clevertec.dto.EngineDto;
 import ru.clevertec.entity.EngineEntity;
 import ru.clevertec.enums.Fuel;
+import ru.clevertec.exception.EngineNotFoundException;
 import ru.clevertec.mapper.EngineDtoMapper;
 import ru.clevertec.mapper.EngineDtoMapperImpl;
 import ru.clevertec.repository.EngineRepository;
@@ -23,6 +24,10 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -64,36 +69,90 @@ class EngineServiceTest {
         EngineEntity engineEntity = TestData.generateEngineEntity();
         UUID uuid = engineEntity.getUuid();
 
-        List<EngineEntity> listEntity = TestData.generateEngineEntityList();
-        listEntity.getFirst().setUuid(uuid);
+        EngineDto engineDto = TestData.generateEngineDto();
+        engineDto.setUuid(uuid);
+
+        when(engineRepository.getEngineById(uuid))
+                .thenReturn(Optional.of(engineEntity));
+        when(engineDtoMapper.toEngineDto(engineEntity))
+                .thenReturn(engineDto);
+
+        //when
+        EngineDto engineById = engineService.getEngineById(uuid);
+
+        //then
+        assertEquals(Optional.of(engineDto).get().getUuid(), engineById.getUuid());
+    }
+
+    @Test
+    void shouldThrowEngineNotFoundExceptionWhenEngineNotFound() {
+        //given
+        EngineEntity engineEntity = TestData.generateEngineEntity();
+        UUID uuid = engineEntity.getUuid();
 
         EngineDto engineDto = TestData.generateEngineDto();
         engineDto.setUuid(uuid);
 
+        when(engineRepository.getEngineById(uuid))
+                .thenReturn(Optional.empty());
+        //when
+        // then
+        assertThrows(
+                EngineNotFoundException.class,
+                () -> engineService.getEngineById(uuid)
+        );
+    }
 
-        engineDto.setUuid(uuid);
-        when(engineRepository.getEngines())
-                .thenReturn(listEntity);
-        when(engineDtoMapper.toEngineDto(engineEntity))
-                .thenReturn(engineDto);
-//
+    @Test
+    void shouldAddNewEntityInRepository() {
+        //given
+        EngineDto engineDto = TestData.generateNewEngineDto();
+        UUID uuid = engineDto.getUuid();
+
+        EngineEntity engineEntity = TestData.generateNewEngineEntity();
+        engineEntity.setUuid(uuid);
+
+        when(engineDtoMapper.toEngineEntity(engineDto))
+                .thenReturn(engineEntity);
+        when(engineRepository.createEngine(engineEntity))
+                .thenReturn(engineEntity);
 
         //when
-        Optional<EngineDto> engineById = engineService.getEngineById(uuid);
+        EngineDto engineDtoNew = engineService.createEngine(engineDto);
 
         //then
-        assertEquals(Optional.of(engineDto).get().getUuid(), engineById.get().getUuid());
+        assertThat(engineDtoNew.getUuid()).isEqualTo(engineDtoMapper.toEngineEntity(engineDto).getUuid());
+
     }
 
     @Test
-    void createEngine() {
+    void shouldChangeEngineInRepository() {
+        //given
+        EngineDto engineDtoNew = TestData.generateNewEngineDto();
+        EngineEntity engineEntityNew = TestData.generateNewEngineEntity();
+
+        EngineEntity engineEntityOld = TestData.generateEngineEntity();
+        UUID uuid = engineEntityOld.getUuid();
+
+        when(engineDtoMapper.toEngineEntity(engineDtoNew))
+                .thenReturn(engineEntityNew);
+        //when
+        EngineDto engineDto = engineService.updateEngine(uuid, engineDtoNew);
+
+        //then
+        assertThat(engineDto.getUuid()).isEqualTo(engineDtoNew.getUuid());
+
     }
 
     @Test
-    void updateEngine() {
-    }
+    void shouldCallDeleteRepositoryMethodEngine() {
+        //given
+        UUID uuid = UUID.randomUUID();
 
-    @Test
-    void deleteEngine() {
+        //when
+        engineService.deleteEngine(uuid);
+
+        //then
+        verify(engineRepository).deleteEngine(uuid);
     }
 }

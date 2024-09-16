@@ -21,6 +21,8 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testAnnotationProcessor "org.projectlombok:lombok:1.18.30"
     testImplementation 'org.mockito:mockito-junit-jupiter:5.13.0'
+    testImplementation 'org.assertj:assertj-core:3.26.3'
+
 
 }
 

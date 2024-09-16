@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.mapstruct.Mapper;
 import ru.clevertec.dto.EngineDto;
 import ru.clevertec.entity.EngineEntity;
+import ru.clevertec.exception.EngineNotFoundException;
 import ru.clevertec.mapper.EngineDtoMapper;
 import ru.clevertec.mapper.EngineDtoMapperImpl;
 import ru.clevertec.repository.EngineRepository;
@@ -21,42 +22,19 @@ public class EngineService {
         List<EngineEntity> engines = engineRepository.getEngines();
         return engineDtoMapper.toEngineDtos(engines);
     }
-    public Optional<EngineDto> getEngineById(UUID uuid) {
-        EngineEntity engine = null;
-        for (EngineEntity eng : engineRepository.getEngines()) {
-            if (eng.getUuid().equals(uuid)) {
-                engine = eng;
-            }
-        }
-        return Optional.ofNullable(engineDtoMapper.toEngineDto(engine));
+    public EngineDto getEngineById(UUID uuid) {
+        EngineEntity engineEntity = engineRepository.getEngineById(uuid).orElseThrow(() -> EngineNotFoundException.byEngineId(uuid));
+        return engineDtoMapper.toEngineDto(engineEntity);
     }
     public EngineDto createEngine(EngineDto engineDto) {
-        engineRepository.getEngines().add(engineDtoMapper.toEngineEntity(engineDto));
+        engineRepository.createEngine(engineDtoMapper.toEngineEntity(engineDto));
         return engineDto;
     }
     public EngineDto updateEngine(UUID uuid, EngineDto engineDto) {
-        int id = 0;
-        for (EngineEntity eng : engineRepository.getEngines()) {
-            if (eng.getUuid().equals(uuid)) {
-                break;
-            }
-            id++;
-        }
-        if (engineRepository.getEngines().size() != id) {
-            engineRepository.getEngines().set(id, engineDtoMapper.toEngineEntity(engineDto));
-        }
+        engineRepository.updateEngine(uuid, engineDtoMapper.toEngineEntity(engineDto));
         return engineDto;
     }
     public void deleteEngine(UUID uuid) {
-        int id = 0;
-        for (EngineEntity eng : engineRepository.getEngines()) {
-            if (eng.getUuid().equals(uuid)) {
-                break;
-            }
-            id++;
-        }
-        if (engineRepository.getEngines().size() != id) {
-            engineRepository.getEngines().remove(id);
-        }
+        engineRepository.deleteEngine(uuid);
     }
 }
