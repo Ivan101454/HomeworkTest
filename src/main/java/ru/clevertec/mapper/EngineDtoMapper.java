@@ -6,7 +6,7 @@ import ru.clevertec.entity.EngineEntity;
 
 import java.util.List;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface EngineDtoMapper {
     List<EngineDto> toEngineDtos(List<EngineEntity> engineEntities);
     EngineDto toEngineDto(EngineEntity engineEntity);

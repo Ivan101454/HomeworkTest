@@ -6,6 +6,7 @@ import ru.clevertec.enums.Fuel;
 import ru.clevertec.mapper.EngineDtoMapper;
 import ru.clevertec.mapper.EngineDtoMapperImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,11 +24,18 @@ public class TestData {
         return new EngineDto(UUID.randomUUID(), "CAXA", 900, 1, 1.4, Fuel.GAS, 122, 100000);
     }
     public static List<EngineEntity> generateEngineEntityList() {
-        return List.of(
+        return new ArrayList<>(List.of(
                 new EngineEntity(UUID.randomUUID(), "AWT", 1200, 2, 1.8, Fuel.GAS, 150, 300000),
                 new EngineEntity(UUID.randomUUID(), "AFN", 700, 10, 1.9, Fuel.DIESEL, 110, 200000),
                 new EngineEntity(UUID.randomUUID(), "CCDA", 1500, 1, 2.8, Fuel.GAS, 190, 150000)
-        );
+        ));
+    }
+    public static List<EngineDto> generateEngineDtoList() {
+        return new ArrayList<>(List.of(
+                new EngineDto(UUID.randomUUID(), "AWT", 1200, 2, 1.8, Fuel.GAS, 150, 300000),
+                new EngineDto(UUID.randomUUID(), "AFN", 700, 10, 1.9, Fuel.DIESEL, 110, 200000),
+                new EngineDto(UUID.randomUUID(), "CCDA", 1500, 1, 2.8, Fuel.GAS, 190, 150000)
+        ));
     }
 
 }

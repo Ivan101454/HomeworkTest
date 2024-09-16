@@ -1,5 +1,6 @@
 package ru.clevertec.repository;
 
+import org.springframework.stereotype.Repository;
 import ru.clevertec.entity.EngineEntity;
 import ru.clevertec.enums.Fuel;
 
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Repository
 public class EngineRepository {
     private static final List<EngineEntity> db = new ArrayList<>(List.of(
             new EngineEntity(UUID.randomUUID(), "AWT", 1200, 2, 1.8, Fuel.GAS, 150, 300000),
