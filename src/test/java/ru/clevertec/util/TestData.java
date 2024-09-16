@@ -14,7 +14,7 @@ public class TestData {
         return new EngineEntity(UUID.randomUUID(), "AWT", 1200, 2, 1.8, Fuel.GAS, 150, 300000);
     }
     public static EngineDto generateEngineDto() {
-        return new EngineDtoMapperImpl().toEngineDto(generateEngineEntity());
+        return new EngineDto(UUID.randomUUID(), "AWT", 1200, 2, 1.8, Fuel.GAS, 150, 300000);
     }
     public static List<EngineEntity> generateEngineEntityList() {
         return List.of(

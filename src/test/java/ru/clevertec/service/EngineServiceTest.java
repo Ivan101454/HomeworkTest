@@ -65,24 +65,24 @@ class EngineServiceTest {
         UUID uuid = engineEntity.getUuid();
 
         List<EngineEntity> listEntity = TestData.generateEngineEntityList();
-        listEntity.set(0, engineEntity);
+        listEntity.getFirst().setUuid(uuid);
 
         EngineDto engineDto = TestData.generateEngineDto();
         engineDto.setUuid(uuid);
 
-        when(engineRepository.getEngineById(uuid))
-                .thenReturn(Optional.of(engineEntity));
+
+        engineDto.setUuid(uuid);
         when(engineRepository.getEngines())
                 .thenReturn(listEntity);
         when(engineDtoMapper.toEngineDto(engineEntity))
                 .thenReturn(engineDto);
+//
 
         //when
         Optional<EngineDto> engineById = engineService.getEngineById(uuid);
 
         //then
         assertEquals(Optional.of(engineDto).get().getUuid(), engineById.get().getUuid());
-
     }
 
     @Test
