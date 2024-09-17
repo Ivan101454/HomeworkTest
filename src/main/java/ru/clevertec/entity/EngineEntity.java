@@ -15,7 +15,7 @@ import java.util.UUID;
 @Accessors(chain = true)
 public class EngineEntity {
     private UUID uuid;
-    private String FactoryNumber;
+    private String factoryNumber;
     private double priceEngine;
     private int quantity;
     private double displacement ;

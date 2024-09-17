@@ -24,24 +24,24 @@ public class EngineController {
         return ResponseEntity.ok(engines);
     }
     @GetMapping("api/v1/{id}")
-    private ResponseEntity<EngineDto> findById(@PathVariable("id") String id) {
+    public ResponseEntity<EngineDto> findById(@PathVariable("id") String id) {
         UUID uuid = UUID.fromString(id);
         EngineDto engineById = engineService.getEngineById(uuid);
         return ResponseEntity.ok(engineById);
     }
     @PostMapping("api/v1/create")
-    private ResponseEntity<EngineDto> create(EngineDto engine) {
+    public ResponseEntity<EngineDto> create(EngineDto engine) {
         EngineDto engineDto = engineService.createEngine(engine);
         return ResponseEntity.ok(engineDto);
     }
     @PostMapping("api/v1/update/{id}")
-    private ResponseEntity<EngineDto> update(@PathVariable("id") String id, EngineDto engine) {
+    public ResponseEntity<EngineDto> update(@PathVariable("id") String id, EngineDto engine) {
         UUID uuid = UUID.fromString(id);
         EngineDto engineDto = engineService.updateEngine(uuid, engine);
         return ResponseEntity.ok(engineDto);
     }
     @PostMapping("api/v1/delete/{id}")
-    private void delete(@PathVariable("id") String id) {
+    public void delete(@PathVariable("id") String id) {
         UUID uuid = UUID.fromString(id);
         engineService.deleteEngine(uuid);
     }
