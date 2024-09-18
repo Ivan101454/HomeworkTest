@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.StreamingHttpOutputMessage;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.clevertec.dto.EngineDto;
 import ru.clevertec.enums.Fuel;
@@ -18,12 +20,14 @@ import ru.clevertec.util.TestData;
 
 import java.util.UUID;
 
+import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -35,6 +39,7 @@ class EngineControllerTest {
     MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
+    private static ObjectMapper mapper = new ObjectMapper();
 
 
     @Test
@@ -80,6 +85,7 @@ class EngineControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(engineDto)))
+                .andExpect(status().is(201))
                 .andExpect(jsonPath("$.uuid").value(uuid.toString()));
     }
 
@@ -96,8 +102,6 @@ class EngineControllerTest {
                         .content(objectMapper.writeValueAsString(engineDto)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.uuid").value(uuid.toString()));
-
-
     }
 
     @Test

@@ -1,10 +1,12 @@
 package ru.clevertec.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.clevertec.dto.EngineDto;
 import ru.clevertec.service.EngineService;
@@ -30,12 +32,12 @@ public class EngineController {
         return ResponseEntity.ok(engineById);
     }
     @PostMapping("api/v1/create")
-    public ResponseEntity<EngineDto> create(EngineDto engine) {
+    public ResponseEntity<EngineDto> create(@RequestBody EngineDto engine) {
         EngineDto engineDto = engineService.createEngine(engine);
-        return ResponseEntity.ok(engineDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(engineDto);
     }
     @PostMapping("api/v1/update/{id}")
-    public ResponseEntity<EngineDto> update(@PathVariable("id") String id, EngineDto engine) {
+    public ResponseEntity<EngineDto> update(@PathVariable("id") String id, @RequestBody EngineDto engine) {
         UUID uuid = UUID.fromString(id);
         EngineDto engineDto = engineService.updateEngine(uuid, engine);
         return ResponseEntity.ok(engineDto);
