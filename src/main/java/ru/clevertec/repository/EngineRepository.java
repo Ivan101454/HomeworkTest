@@ -33,6 +33,15 @@ public class EngineRepository {
         }
         return Optional.ofNullable(engine);
     }
+    public Optional<EngineEntity> getEngineByFactoryNumber(String factoryNumber) {
+        EngineEntity engine = null;
+        for (EngineEntity eng: db) {
+            if (eng.getFactoryNumber().equals(factoryNumber)) {
+                engine = eng;
+            }
+        }
+        return Optional.ofNullable(engine);
+    }
 
     public EngineEntity createEngine(EngineEntity engineEntity) {
         db.add(engineEntity);

@@ -29,6 +29,11 @@ public class EngineService {
         EngineEntity engineEntity = engineRepository.getEngineById(uuid).orElseThrow(() -> EngineNotFoundException.byEngineId(uuid));
         return engineDtoMapper.toEngineDto(engineEntity);
     }
+    public EngineDto getEngineByFactoryNumber(String factoryNumber) {
+        EngineEntity engine = engineRepository.getEngineByFactoryNumber(factoryNumber).orElseThrow(() -> EngineNotFoundException.byEngineFactoryNumber(factoryNumber));
+        return engineDtoMapper.toEngineDto(engine);
+    }
+
     public EngineDto createEngine(EngineDto engineDto) {
         engineRepository.createEngine(engineDtoMapper.toEngineEntity(engineDto));
         return engineDto;

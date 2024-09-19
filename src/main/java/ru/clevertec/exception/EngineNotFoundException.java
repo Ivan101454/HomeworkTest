@@ -12,6 +12,11 @@ public class EngineNotFoundException extends RuntimeException {
                 String.format("Не найден двигатель по uuid = %s", uuid)
                 );
     }
+    public static EngineNotFoundException byEngineFactoryNumber(String factoryNumber) {
+        return new EngineNotFoundException(
+                String.format("Не найден двигатель по номеру = %s", factoryNumber)
+        );
+    }
 
 
 }

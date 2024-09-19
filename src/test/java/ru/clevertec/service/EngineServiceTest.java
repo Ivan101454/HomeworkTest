@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -22,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -72,16 +75,34 @@ class EngineServiceTest {
         EngineDto engineDto = TestData.generateEngineDto();
         engineDto.setUuid(uuid);
 
+        //when
         when(engineRepository.getEngineById(uuid))
                 .thenReturn(Optional.of(engineEntity));
         when(engineDtoMapper.toEngineDto(engineEntity))
                 .thenReturn(engineDto);
-
-        //when
         EngineDto engineById = engineService.getEngineById(uuid);
 
         //then
         assertEquals(Optional.of(engineDto).get().getUuid(), engineById.getUuid());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"AWT", "AFN", "CCDA"})
+    void shouldGetEngineByFactoryNumber(String factoryNumber) {
+        //given
+
+        EngineEntity engine = TestData.generateEngineEntity();
+        engine.setFactoryNumber("factoryNumber");
+
+
+        //when
+       when(engineRepository.getEngineByFactoryNumber(factoryNumber))
+               .thenReturn(Optional.of(engine));
+
+        //then
+        assertDoesNotThrow(
+                () -> engineService.getEngineByFactoryNumber(factoryNumber)
+        );
     }
 
     @Test
@@ -93,9 +114,10 @@ class EngineServiceTest {
         EngineDto engineDto = TestData.generateEngineDto();
         engineDto.setUuid(uuid);
 
+
+        //when
         when(engineRepository.getEngineById(uuid))
                 .thenReturn(Optional.empty());
-        //when
         // then
         assertThrows(
                 EngineNotFoundException.class,
